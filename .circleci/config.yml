@@ -1,14 +1,39 @@
 version: 2.1
 
 jobs:
-  sayhello:
-    description: A job that says Hello
+  checkout_and_unit_test:
     machine: true
     steps:
       - run: echo "Hello World!"
-      - run: echo "Bonjour le monde"
-  displayFiles:
-    description: Une job qui affiche les fichiers
+  deploy_backend:
+    machine: true
+    steps:
+      - run: ls -al
+  integration_tests_backend:
+    machine: true
+    steps:
+      - run: ls -al
+  deploy_staging:
+    machine: true
+    steps:
+      - run: ls -al
+  acceptance_tests_1:
+    machine: true
+    steps:
+      - run: ls -al
+  acceptance_tests_2:
+    machine: true
+    steps:
+      - run: ls -al
+  acceptance_tests_3:
+    machine: true
+    steps:
+      - run: ls -al
+  acceptance_tests_4:
+    machine: true
+    steps:
+      - run: ls -al
+  deploy_production:
     machine: true
     steps:
       - run: ls -al
@@ -16,9 +41,32 @@ jobs:
 workflows:
   monWorkflow:
     jobs:
-      - sayhello
-      - displayFiles:
+      - checkout_and_unit_test
+      - deploy_backend:
           requires:
-            - sayhello
-
+            - checkout_and_unit_test
+      - integration_tests_backend:
+          requires:
+            - deploy_backend
+      - deploy_staging:
+          requires:
+            - integration_tests_backend
+      - acceptance_tests_1:
+          requires:
+            - deploy_staging
+      - acceptance_tests_2:
+          requires:
+            - deploy_staging
+      - acceptance_tests_3:
+          requires:
+            - deploy_staging
+      - acceptance_tests_4:
+          requires:
+            - deploy_staging
+      - deploy_production:
+          requires:
+            - acceptance_tests_1
+            - acceptance_tests_2
+            - acceptance_tests_3
+            - acceptance_tests_4
          
